@@ -67,6 +67,10 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
 
+    double NIS_radar_;
+
+    double NIS_lidar_;
+
 
   /**
    * Constructor
@@ -102,6 +106,26 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+    void initialise(const MeasurementPackage &meas_package);
+
+    MatrixXd generate_augmented_sigma_points() const;
+
+    MatrixXd predict_sigma_points(double delta_t, const MatrixXd &Xsig_aug) const;
+
+    void predict_mean_and_covariance(const MatrixXd &Xsig_pred);
+
+    void generate_sigma_points() const;
+
+    VectorXd mean_predicted_measurement(int n_z, MatrixXd &Zsig) const;
+
+    MatrixXd covariance_matrix(int n_z, MatrixXd &Zsig, const VectorXd &z_pred) const;
+
+    MatrixXd &add_radar_measurement_noise(int n_z, MatrixXd &S) const;
+
+    MatrixXd create_cross_corelation_matrix(int n_z, MatrixXd &Zsig, const VectorXd &z_pred) const;
+
+    MatrixXd &add_lidar_measurement_noise(int n_z, MatrixXd &S) const;
 };
 
 #endif /* UKF_H */
